@@ -15,13 +15,25 @@ def load_a3m(fasta, max_gap_fraction=0.9):
     # We want to exclude the lowercase, not ignore the uppercase because of gaps.
     lowercase = set('abcdefghijklmnopqrstuvwxyz')
 
+    # Figure out the length of the sequence
+    f = open(fasta)
+    for line in f:
+        if line.startswith('>'):
+            continue
+        seq_length = len(line.strip())
+        break
+    else:
+        raise RuntimeError('I cannot find the first sequence')
+    f.seek(0)
+
     parsed = []
-    for line in open(fasta):
+    for line in f:
         if line.startswith('>'):
             continue
         line = line.strip()
-        gap_fraction = line.count('-') / len(line)
+        gap_fraction = line.count('-') / seq_length
         if gap_fraction <= max_gap_fraction:
             parsed.append([mapping.get(ch, 22) for ch in line
                            if ch not in lowercase])
+
     return np.array(parsed, dtype=np.int8).T
