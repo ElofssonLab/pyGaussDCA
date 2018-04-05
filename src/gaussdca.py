@@ -2,11 +2,10 @@ import numpy as np
 from scipy import linalg
 
 import _gdca
+import _load_data
 
-import time
 
-
-def compute_FN(mJ, n_cols: int, alphabet_size: int):
+def _compute_FN(mJ, n_cols: int, alphabet_size: int):
     FN = np.zeros((n_cols, n_cols), dtype=np.float64)
 
     s = alphabet_size - 1
@@ -34,25 +33,26 @@ def compute_FN(mJ, n_cols: int, alphabet_size: int):
     return FN, _gdca.apc_correction(FN)
 
 
-def compute_gdca_scores(alignment):
-    alignment_T = alignment.T.copy(order='C')
+def _compute_gdca_scores(alignment, alignment_T):
     alphabet_size = alignment.max()
 
     n_cols = alignment_T.shape[1]
     depth = alignment_T.shape[0]
 
     # Prepare inputs
-    t0 = time.time()
     covar, meff = _gdca.prepare_covariance(alignment, alignment_T)
-    dt= (time.time() - t0)
-
 
     # Invert matrix
     cho = linalg.cho_factor(covar, check_finite=False)
     mJ = linalg.cho_solve(cho, np.eye(covar.shape[0]), check_finite=False, overwrite_b=True)
 
-
     # Compute Frobenius Norm
-    FN, FN_corr = compute_FN(mJ, n_cols, alphabet_size)
+    FN, FN_corr = _compute_FN(mJ, n_cols, alphabet_size)
     results = dict(gdca=FN, gdca_corr=FN_corr, eff_seq=meff, seq=depth)
     return results
+
+
+def run(path):
+    ali = _load_data.load_a3m(path)
+
+    return _compute_gdca_scores(np.ascontiguousarray(ali), np.ascontiguousarray(ali.T))
