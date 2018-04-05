@@ -11,7 +11,10 @@ def load_a3m(fasta, max_gap_fraction=0.9):
                'N': 12, 'O': 21, 'P': 13, 'Q': 14, 'R': 15, 'S': 16, 'T': 17,
                'V': 18, 'W': 19, 'Y': 20,
                'U': 21, 'Z': 21, 'X': 21, 'J': 21}
-    uppercase = set('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
+
+    # We want to exclude the lowercase, not ignore the uppercase because of gaps.
+    lowercase = set('abcdefghijklmnopqrstuvwxyz')
+
     parsed = []
     for line in open(fasta):
         if line.startswith('>'):
@@ -20,6 +23,5 @@ def load_a3m(fasta, max_gap_fraction=0.9):
         gap_fraction = line.count('-') / len(line)
         if gap_fraction <= max_gap_fraction:
             parsed.append([mapping.get(ch, 22) for ch in line
-                           if ch in uppercase])
-
+                           if ch not in lowercase])
     return np.array(parsed, dtype=np.int8).T
