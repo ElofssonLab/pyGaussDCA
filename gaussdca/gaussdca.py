@@ -1,8 +1,8 @@
 import numpy as np
 from scipy import linalg
 
-import _gdca
-import _load_data
+from . import _gdca
+from . import _load_data
 
 
 def _compute_FN(mJ, n_cols: int, alphabet_size: int):
