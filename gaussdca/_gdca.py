@@ -52,6 +52,29 @@ def _compute_weights(alignment, theta: float, n_cols: int, depth: int):
     return Meff, weights
 
 
+def _compute_weights_parallel(alignment, theta: float, n_cols: int, depth: int):
+    _thresh = np.floor(theta * n_cols)
+    weights = np.ones(depth, dtype=np.float64)
+
+    if theta == 0:
+        Meff = depth
+        return Meff, weights
+
+    # omp parallel for
+    for i in range(depth - 1):
+        this_vec = alignment[i, :]
+        for j in range(i + 1, depth):
+            _dist = np.sum(this_vec != alignment[j, :])
+
+            if _dist < _thresh:
+                weights[i] += 1.
+                weights[j] += 1.
+
+    weights[:] = 1. / weights
+    Meff = weights.sum()
+    return Meff, weights
+
+
 def _compute_freqs(alignment, n_cols: int, depth: int, q: int, W):
     s = q - 1
     expanded_cols = n_cols * s
@@ -125,14 +148,19 @@ def _compute_covar(alignment, weights, pseudocount):
     return covar
 
 
+# pythran export prepare_covariance(int8[:, :],int8[:, :], float, bool)
+# pythran export prepare_covariance(int8[:, :], int8[:, :], bool)
 # pythran export prepare_covariance(int8[:, :],int8[:, :], float)
 # pythran export prepare_covariance(int8[:, :], int8[:, :])
-def prepare_covariance(alignment, alignment_T, pseudocount=0.8):
+def prepare_covariance(alignment, alignment_T, pseudocount=0.8, parallel=True):
     n_cols = alignment_T.shape[1]
     depth = alignment_T.shape[0]
 
     theta = _compute_theta(alignment)
-    meff, weights = _compute_weights(alignment_T, theta, n_cols, depth)
+    if parallel:
+        meff, weights = _compute_weights_parallel(alignment_T, theta, n_cols, depth)
+    else:
+        meff, weights = _compute_weights(alignment_T, theta, n_cols, depth)
     covar = _compute_covar(alignment, weights, pseudocount)
     return covar, meff
 
