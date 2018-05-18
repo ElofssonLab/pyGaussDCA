@@ -21,7 +21,6 @@ def _compute_theta(alignment):
 
     meanfracid = 0.0
     for i in range(n_cols):
-        # match_groups = _bincount(alignment[i, :], q_max)
         match_groups = np.bincount(alignment[i, :])
         # N choose 2 has a nice polynomial expansion:
         meanfracid += np.sum(match_groups * (match_groups - 1) / 2)

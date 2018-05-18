@@ -33,26 +33,31 @@ def _compute_FN(mJ, n_cols: int, alphabet_size: int):
     return FN, _gdca.apc_correction(FN)
 
 
-def _compute_gdca_scores(alignment, alignment_T):
+def _compute_gdca_scores(alignment, alignment_T, verbose):
     alphabet_size = alignment.max()
 
     n_cols = alignment_T.shape[1]
     depth = alignment_T.shape[0]
 
-    # Prepare inputs
+    if verbose:
+        print('Prepare inputs')
     covar, meff = _gdca.prepare_covariance(alignment, alignment_T)
 
-    # Invert matrix
+    if verbose:
+        print('Invert matrix')
     cho = linalg.cho_factor(covar, check_finite=False)
     mJ = linalg.cho_solve(cho, np.eye(covar.shape[0]), check_finite=False, overwrite_b=True)
 
-    # Compute Frobenius Norm
+    if verbose:
+        print('Compute Frobenius Norm')
     FN, FN_corr = _compute_FN(mJ, n_cols, alphabet_size)
     results = dict(gdca=FN, gdca_corr=FN_corr, eff_seq=meff, seq=depth)
     return results
 
 
-def run(path):
+def run(path, verbose=False):
+    if verbose:
+        print('Loading data')
     ali = _load_data.load_a3m(path)
 
-    return _compute_gdca_scores(np.ascontiguousarray(ali), np.ascontiguousarray(ali.T))
+    return _compute_gdca_scores(np.ascontiguousarray(ali), np.ascontiguousarray(ali.T), verbose)
