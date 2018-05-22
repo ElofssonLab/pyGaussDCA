@@ -98,7 +98,7 @@ def _compute_freqs(alignment, n_cols: int, depth: int, q: int, W):
                 b = alignment[j, k]
 
                 if a != q and b != q:
-                    Pij[i0 + a - 1, j0 + b - 1] += W[k] * (a != q) * (b != q)
+                    Pij[i0 + a - 1, j0 + b - 1] += W[k]
             j0 = j0 + s
 
     Meff = W.sum()
