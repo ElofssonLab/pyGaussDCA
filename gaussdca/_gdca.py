@@ -59,7 +59,7 @@ def _compute_weights_parallel(alignment, theta: float, n_cols: int, depth: int):
         Meff = depth
         return Meff, weights
 
-    # omp parallel for
+    # omp parallel for schedule(dynamic, 1000)
     for i in range(depth - 1):
         this_vec = alignment[i, :]
         for j in range(i + 1, depth):
