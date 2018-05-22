@@ -71,9 +71,8 @@ def _compute_freqs(alignment, n_cols: int, depth: int, q: int, W):
     s = q - 1
     expanded_cols = n_cols * s
 
-    pad = 1
-    Pi = np.zeros(expanded_cols + pad, dtype=np.float64)
-    Pij = np.zeros((expanded_cols + pad, expanded_cols + pad), dtype=np.float64)
+    Pi = np.zeros(expanded_cols, dtype=np.float64)
+    Pij = np.zeros((expanded_cols, expanded_cols), dtype=np.float64)
 
     for i in range(n_cols):
         i0 = i * s
@@ -99,7 +98,7 @@ def _compute_freqs(alignment, n_cols: int, depth: int, q: int, W):
     Pij = np.maximum(Pij, Pij.T)
     Pij /= Meff
 
-    return Pi[:-pad], Pij[:-pad, :-pad]
+    return Pi, Pij
 
 
 def _add_pseudocount(Pi_true, Pij_true, pc: float, N: int, q: int):
