@@ -101,7 +101,7 @@ def _compute_freqs(alignment, n_cols: int, depth: int, q: int, W):
     return Pi, Pij
 
 
-def _add_pseudocount(Pi_true, Pij_true, pc: float, N: int, q: int):
+def _add_pseudocount(Pi_true, Pij_true, pc: float, n_cols: int, q: int):
     pcq = pc / q
     s = q - 1
 
@@ -109,7 +109,7 @@ def _add_pseudocount(Pi_true, Pij_true, pc: float, N: int, q: int):
     Pij = (1 - pc) * Pij_true + pcq / q
 
     i0 = 0
-    for i in range(N):
+    for i in range(n_cols):
         # Per block correction
         Pij[i0: i0 + s, i0:i0 + s] = (1 - pc) * Pij_true[i0: i0 + s, i0:i0 + s]
 
