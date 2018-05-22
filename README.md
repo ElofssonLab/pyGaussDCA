@@ -16,7 +16,7 @@ It is based on the [original code][original] in Julia
 It is written as a Python library to be more easily integrated with our software. 
 
 ## How do I install it?
-First install [Pythran][pythran] from master, we need some bugfixes that are not in the released version. Then, just use pip to install pyGaussDCA.
+First install [Pythran][pythran] 0.8.5 or higher. Then, just use pip to install pyGaussDCA.
 
 [pythran]:https://github.com/serge-sans-paille/pythran
 
@@ -31,7 +31,6 @@ results = gaussdca.run('/path/to/a3m')
 ```
 
 ## TODO:
-  * Parallelisation
   * Example and doc
   * Tests
   * CLI util
