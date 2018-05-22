@@ -8,13 +8,6 @@ def apc_correction(matrix):
     return corrected
 
 
-def _bincount(vector, max_val):
-    counts = np.zeros(max_val + 1, dtype=np.uint64)
-    for i in range(max_val + 1):
-        counts[i] = np.sum(vector == i)
-    return counts
-
-
 def _compute_theta(alignment):
     alignment_depth = alignment.shape[1]
     n_cols = alignment.shape[0]
