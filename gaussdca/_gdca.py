@@ -24,45 +24,23 @@ def _compute_theta(alignment):
 
 def _compute_weights(alignment, theta: float, n_cols: int, depth: int):
     _thresh = np.floor(theta * n_cols)
-    weights = np.ones(depth, dtype=np.float64)
+    counts = np.ones(depth, dtype=np.float64)
 
     if theta == 0:
         Meff = depth
-        return Meff, weights
+        return Meff, counts
 
+    # omp parallel for schedule(dynamic, 10)
     for i in range(depth - 1):
         this_vec = alignment[i, :]
         for j in range(i + 1, depth):
             _dist = np.sum(this_vec != alignment[j, :])
 
             if _dist < _thresh:
-                weights[i] += 1.
-                weights[j] += 1.
+                counts[i] += 1.
+                counts[j] += 1.
 
-    weights[:] = 1. / weights
-    Meff = weights.sum()
-    return Meff, weights
-
-
-def _compute_weights_parallel(alignment, theta: float, n_cols: int, depth: int):
-    _thresh = np.floor(theta * n_cols)
-    weights = np.ones(depth, dtype=np.float64)
-
-    if theta == 0:
-        Meff = depth
-        return Meff, weights
-
-    # omp parallel for schedule(dynamic, 1000)
-    for i in range(depth - 1):
-        this_vec = alignment[i, :]
-        for j in range(i + 1, depth):
-            _dist = np.sum(this_vec != alignment[j, :])
-
-            if _dist < _thresh:
-                weights[i] += 1.
-                weights[j] += 1.
-
-    weights[:] = 1. / weights
+    weights = 1. / counts
     Meff = weights.sum()
     return Meff, weights
 
@@ -139,19 +117,14 @@ def _compute_covar(alignment, weights, pseudocount):
     return covar
 
 
-# pythran export prepare_covariance(int8[:, :],int8[:, :], float, bool)
-# pythran export prepare_covariance(int8[:, :], int8[:, :], bool)
 # pythran export prepare_covariance(int8[:, :],int8[:, :], float)
 # pythran export prepare_covariance(int8[:, :], int8[:, :])
-def prepare_covariance(alignment, alignment_T, pseudocount=0.8, parallel=True):
+def prepare_covariance(alignment, alignment_T, pseudocount=0.8):
     n_cols = alignment_T.shape[1]
     depth = alignment_T.shape[0]
 
     theta = _compute_theta(alignment)
-    if parallel:
-        meff, weights = _compute_weights_parallel(alignment_T, theta, n_cols, depth)
-    else:
-        meff, weights = _compute_weights(alignment_T, theta, n_cols, depth)
+    meff, weights = _compute_weights(alignment_T, theta, n_cols, depth)
     covar = _compute_covar(alignment, weights, pseudocount)
     return covar, meff
 
