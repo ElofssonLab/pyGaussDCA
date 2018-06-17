@@ -16,8 +16,8 @@ module_gdca = PythranExtension('gaussdca._gdca', sources=['gaussdca/_gdca.py'],
 
 # Main setup:
 setup(name='pyGaussDCA', version='0.1.1',
-      description='',
-      url='',
+      description='Fast implementation of GaussDCA',
+      url='https://github.com/ElofssonLab/pyGaussDCA/',
       author='David Menéndez Hurtado',
       author_email='davidmenhur@gmail.com',
       license='GPLv3',
