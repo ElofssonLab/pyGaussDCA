@@ -129,6 +129,16 @@ def prepare_covariance(alignment, alignment_T, pseudocount=0.8):
     return covar, meff
 
 
+# pythran export compute_weights(int8[:, :], int8[:, :], float)
+def compute_weights(alignment, alignment_T, theta):
+    if theta <= 0.0:
+        theta = _compute_theta(alignment)
+    n_cols = alignment_T.shape[1]
+    depth = alignment_T.shape[0]
+    meff, weights = _compute_weights(alignment_T, theta, n_cols, depth)
+    return weights
+
+
 # pythran export compute_FN(float64[:, :], int, int8)
 # pythran export compute_FN(float[:, :], int, int8)
 # pythran export compute_FN(float64[::, :], int, int8)

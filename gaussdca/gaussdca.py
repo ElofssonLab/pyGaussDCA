@@ -61,3 +61,11 @@ def run(path, verbose=False):
     ali = _load_data.load_a3m(path)
 
     return _compute_gdca_scores(np.ascontiguousarray(ali), np.ascontiguousarray(ali.T), verbose)
+
+
+def compute_weights(path, theta=None):
+    ali = _load_data.load_a3m(path)
+    if theta is None:
+        theta = -1.
+
+    return _gdca.compute_weights(np.ascontiguousarray(ali), np.ascontiguousarray(ali.T), theta)
