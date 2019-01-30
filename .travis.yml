@@ -27,7 +27,7 @@ install:
 
 matrix:
     include:
-    - name "3.6 + pythran master"
+    - name: "3.6 + pythran master"
       python: "3.6"
       install: pip install git+https://github.com/serge-sans-paille/pythran
 
