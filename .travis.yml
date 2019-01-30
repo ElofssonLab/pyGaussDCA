@@ -1,15 +1,25 @@
 sudo: false
 language: python
+dist: xenial
+group: travis_latest
 python:
     - "3.5"
     - "3.6"
-    - "3.7"
+    - "3.7-dev"
 
 addons:
     apt:
         packages:
             - g++-5
+            - libatlas-dev
             - libatlas-base-dev
+            # Speedup builds, particularly when USE_CHROOT=1
+            - eatmydata
+
+cache:
+  directories:
+    - $HOME/.cache/pip
+
 install:
     - pip install --upgrade pip setuptools wheel 
     - pip install --only-binary=numpy,scipy -U ply "networkx>=2" colorlog numpy scipy pytest-xdist pytest pythran
