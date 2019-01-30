@@ -6,9 +6,10 @@ from . import _load_data
 
 
 def _compute_FN(mJ, n_cols: int, alphabet_size: int):
-    FN = np.zeros((n_cols, n_cols), dtype=np.float64)
-
     s = alphabet_size - 1
+
+    FN = np.zeros((n_cols, n_cols), dtype=np.float64)
+    FN_all = np.zeros((n_cols, n_cols, s * s), dtype=np.float64)
 
     fs = s
     fs2 = s * s
@@ -28,9 +29,10 @@ def _compute_FN(mJ, n_cols: int, alphabet_size: int):
 
             FN[i, j] = fn
             FN[j, i] = fn
+            FN_all[i, j, :] = FN_all[j, i, :] = patch.flatten()
 
     FN = np.sqrt(FN)
-    return FN, _gdca.apc_correction(FN)
+    return FN, _gdca.apc_correction(FN), FN_all
 
 
 def _compute_gdca_scores(alignment, alignment_T, verbose):
@@ -50,8 +52,8 @@ def _compute_gdca_scores(alignment, alignment_T, verbose):
 
     if verbose:
         print('Compute Frobenius Norm')
-    FN, FN_corr = _compute_FN(mJ, n_cols, alphabet_size)
-    results = dict(gdca=FN, gdca_corr=FN_corr, eff_seq=meff, seq=depth)
+    FN, FN_corr, FN_all = _compute_FN(mJ, n_cols, alphabet_size)
+    results = dict(gdca=FN, gdca_corr=FN_corr, gdca_expanded=FN_all, eff_seq=meff, seq=depth)
     return results
 
 
