@@ -29,7 +29,11 @@ matrix:
     include:
     - name: "3.6 + pythran master"
       python: "3.6"
-      install: pip install git+https://github.com/serge-sans-paille/pythran
+      install: 
+          - pip install --upgrade pip setuptools wheel 
+          - pip install --only-binary=numpy,scipy -U numpy scipy pytest
+          - pip install git+https://github.com/serge-sans-paille/pythran
+          - pip install .
 
 script:
     - OMP_NUM_THREADS=2; py.test
