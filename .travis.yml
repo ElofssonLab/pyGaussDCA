@@ -22,7 +22,7 @@ cache:
 
 install:
     - pip install --upgrade pip setuptools wheel 
-    - pip install --only-binary=numpy,scipy -U ply "networkx>=2" colorlog numpy scipy pytest-xdist pytest pythran
+    - pip install --only-binary=numpy,scipy -U numpy scipy pytest pythran
     - pip install .
 
 script:
