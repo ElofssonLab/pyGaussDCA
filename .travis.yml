@@ -13,12 +13,10 @@ addons:
             - g++-5
             - libatlas-dev
             - libatlas-base-dev
-            # Speedup builds, particularly when USE_CHROOT=1
+            # Speedup builds
             - eatmydata
 
-cache:
-  directories:
-    - $HOME/.cache/pip
+cache: pip
 
 install:
     - pip install --upgrade pip setuptools wheel 
