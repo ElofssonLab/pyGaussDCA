@@ -23,6 +23,7 @@ tags
 build/
 dist/
 *.egg-info/
+.eggs
 
 *.html
 *.c
