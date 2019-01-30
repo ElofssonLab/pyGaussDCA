@@ -30,9 +30,4 @@ import gaussdca
 results = gaussdca.run('/path/to/a3m')
 ```
 
-## TODO:
-  * Example and doc
-  * Tests
-  * CLI util
-  * Pypi
   
