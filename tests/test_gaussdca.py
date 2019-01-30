@@ -1,8 +1,11 @@
+import os
 import gaussdca
+
+base_path = os.path.dirname(__file__)
 
 
 def test_weights_small_auto():
-    w = gaussdca.compute_weights('data/small.a3m')
+    w = gaussdca.compute_weights(os.path.join(base_path, 'data/small.a3m'))
     assert w.shape == (13279,)
     assert w.max() == 1.0
     assert abs(w.min() - 0.0014619883040935672) < 1e-9
@@ -10,7 +13,7 @@ def test_weights_small_auto():
 
 
 def test_all_small_auto():
-    result = gaussdca.run('data/small.a3m')
+    result = gaussdca.run(os.path.join(base_path,'data/small.a3m'))
 
     N = 53
     # Verify shape
@@ -35,7 +38,7 @@ def test_all_small_auto():
 
 
 def test_weights_small_fixed_theta():
-    w = gaussdca.compute_weights('data/small.a3m', 0.3)
+    w = gaussdca.compute_weights(os.path.join(base_path,'data/small.a3m'), 0.3)
     assert w.shape == (13279,)
     assert w.max() == 1.0
     assert abs(w.min() - 0.0014727540500736377) < 1e-9
@@ -43,19 +46,19 @@ def test_weights_small_fixed_theta():
 
 
 def test_weights_large_auto():
-    w = gaussdca.compute_weights('data/large.a3m')
+    w = gaussdca.compute_weights(os.path.join(base_path,'data/large.a3m'))
     assert w.shape == (35555,)
     # TODO
 
 
 def test_weights_large_fixed_theta():
-    w = gaussdca.compute_weights('data/large.a3m', 0.3)
+    w = gaussdca.compute_weights(os.path.join(base_path,'data/large.a3m'), 0.3)
     assert w.shape == (35555,)
     # TODO
 
 
 def test_all_large_auto():
-    result = gaussdca.run('data/large.a3m')
+    result = gaussdca.run(os.path.join(base_path,'data/large.a3m'))
 
     N = 465
     # Verify shape
