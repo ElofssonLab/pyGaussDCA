@@ -25,6 +25,12 @@ install:
     - pip install --only-binary=numpy,scipy -U numpy scipy pytest pythran
     - pip install .
 
+matrix:
+    include:
+    - name "3.6 + pythran master"
+      python: "3.6"
+      install: pip install git+https://github.com/serge-sans-paille/pythran
+
 script:
     - OMP_NUM_THREADS=2; py.test
     
