@@ -1,5 +1,7 @@
 # pyGaussDCA
 
+[![Build Status](https://travis-ci.org/ElofssonLab/pyGaussDCA.svg?branch=master)](https://travis-ci.org/ElofssonLab/pyGaussDCA)
+
 Python re-implementation of GaussDCA by ["Fast and accurate multivariate
 Gaussian modeling of protein families: Predicting residue contacts and
 protein-interaction partners"][paper]
