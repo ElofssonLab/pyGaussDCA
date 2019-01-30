@@ -15,6 +15,13 @@ It is based on the [original code][original] in Julia
 ## What is different?
 It is written as a Python library to be more easily integrated with our software. 
 
+## What about speed?
+It is fast, it runs in less than 40% of the time of the Julia version. This is due to a faster estimation of the similarity threshold yielding exactly the same resuls, and offloading the alignment compression to the C compiler. More details are available in the [publication.]
+
+The compilation from Python to C is done with [Pythran,][pythran] a fantastic library to convert idiomatic Python code into blazing fast modern C++.
+
+[publication.]:https://www.biorxiv.org/content/early/2018/08/02/383133
+
 ## How do I install it?
 First install [Pythran][pythran] 0.8.5 or higher. Then, just use pip to install pyGaussDCA.
 
