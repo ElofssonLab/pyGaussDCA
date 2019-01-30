@@ -33,6 +33,7 @@ matrix:
           - pip install git+https://github.com/serge-sans-paille/pythran
           - pip install .
 
+env: OMP_NUM_THREADS=2
 script:
-    - OMP_NUM_THREADS=2; py.test
+    - sh tests/run_tests.sh
     
