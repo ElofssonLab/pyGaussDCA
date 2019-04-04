@@ -32,8 +32,10 @@ matrix:
           - pip install --only-binary=numpy,scipy -U numpy scipy pytest
           - pip install git+https://github.com/serge-sans-paille/pythran
           - pip install .
+    allow_failures:
+    - name: "3.6 + pythran master"
 
 env: OMP_NUM_THREADS=2
 script:
     - sh tests/run_tests.sh
-    
+ 
