@@ -9,7 +9,7 @@ def test_weights_small_auto():
     assert w.shape == (13279,)
     assert w.max() == 1.0
     assert abs(w.min() - 0.0014619883040935672) < 1e-9
-    assert abs(w.mean() - 0.1802026091608966) < 1e-5
+    assert abs(w.mean() - 0.1802026091608966) < 2e-5
 
 
 def test_all_small_auto():
@@ -42,7 +42,7 @@ def test_weights_small_fixed_theta():
     assert w.shape == (13279,)
     assert w.max() == 1.0
     assert abs(w.min() - 0.0014727540500736377) < 1e-9
-    assert abs(w.mean() - 0.295421949941903) < 1e-5
+    assert abs(w.mean() - 0.295421949941903) < 2e-5
 
 
 def test_weights_large_auto():
