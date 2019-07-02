@@ -53,7 +53,9 @@ def _compute_gdca_scores(alignment, alignment_T, verbose):
     if verbose:
         print('Compute Frobenius Norm')
     FN, FN_corr, FN_all = _compute_FN(mJ, n_cols, alphabet_size)
-    results = dict(gdca=FN, gdca_corr=FN_corr, gdca_expanded=FN_all, eff_seq=meff, seq=depth)
+    covar_FN, covar_FN_corrected, covar_FN_all = _compute_FN(covar, n_cols, alphabet_size)
+    results = dict(gdca=FN, gdca_corr=FN_corr, gdca_expanded=FN_all, eff_seq=meff, seq=depth,
+                   covar_FN=covar_FN, covar_FN_corr=covar_FN_corrected, covar_expanded=covar_FN_all)
     return results
 
 
