@@ -59,16 +59,24 @@ def _compute_gdca_scores(alignment, alignment_T, verbose):
     return results
 
 
-def run(path, verbose=False):
+def run(path, mode='prot', verbose=False):
+    if mode not in ('prot', 'rna'):
+        raise ValueError(f'Unknown mode {mode}, valid choices are "prot" and "rna"')
+
     if verbose:
         print('Loading data')
-    ali = _load_data.load_a3m(path)
+    ali = _load_data.load_a3m(path, mode)
 
+    if verbose:
+        print('Computing scores')
     return _compute_gdca_scores(np.ascontiguousarray(ali), np.ascontiguousarray(ali.T), verbose)
 
 
-def compute_weights(path, theta=None):
-    ali = _load_data.load_a3m(path)
+def compute_weights(path, mode='prot', theta=None):
+    if mode not in ('prot', 'rna'):
+        raise ValueError(f'Unknown mode {mode}, valid choices are "prot" and "rna"')
+
+    ali = _load_data.load_a3m(path, mode)
     if theta is None:
         theta = -1.
 

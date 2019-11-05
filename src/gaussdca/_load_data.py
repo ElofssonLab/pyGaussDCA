@@ -2,15 +2,25 @@ from __future__ import division
 import numpy as np
 
 
-# pythran export load_a3m(str, float)
-# pythran export load_a3m(str)
-def load_a3m(fasta, max_gap_fraction=0.9):
+# pythran export load_a3m(str, str, float)
+# pythran export load_a3m(str, str)
+def load_a3m(fasta, mode, max_gap_fraction=0.9):
     """ load alignment with the alphabet used in GaussDCA """
-    mapping = {'-': 21, 'A': 1, 'B': 21, 'C': 2, 'D': 3, 'E': 4, 'F': 5,
-               'G': 6, 'H': 7, 'I': 8, 'K': 9, 'L': 10, 'M': 11,
-               'N': 12, 'O': 21, 'P': 13, 'Q': 14, 'R': 15, 'S': 16, 'T': 17,
-               'V': 18, 'W': 19, 'Y': 20,
-               'U': 21, 'Z': 21, 'X': 21, 'J': 21}
+
+    mode = mode.lower()
+    if mode == 'prot':
+        mapping = {'-': 21, 'A': 1, 'B': 21, 'C': 2, 'D': 3, 'E': 4, 'F': 5,
+                   'G': 6, 'H': 7, 'I': 8, 'K': 9, 'L': 10, 'M': 11,
+                   'N': 12, 'O': 21, 'P': 13, 'Q': 14, 'R': 15, 'S': 16, 'T': 17,
+                   'V': 18, 'W': 19, 'Y': 20,
+                   'U': 21, 'Z': 21, 'X': 21, 'J': 21}
+        EXTRA = 22
+    elif mode == 'rna':
+        mapping = {'-': 5, 'A':1, 'U':2, 'T': 2, 'G':3, 'C':4}
+        EXTRA = 6
+    else:
+        mapping = {}
+        EXTRA = 0
 
     # We want to exclude the lowercase, not ignore the uppercase because of gaps.
     lowercase = set('abcdefghijklmnopqrstuvwxyz')
@@ -33,7 +43,7 @@ def load_a3m(fasta, max_gap_fraction=0.9):
         line = line.strip()
         gap_fraction = line.count('-') / seq_length
         if gap_fraction <= max_gap_fraction:
-            parsed.append([mapping.get(ch, 22) for ch in line
+            parsed.append([mapping.get(ch, EXTRA) for ch in line
                            if ch not in lowercase])
 
     return np.array(parsed, dtype=np.int8).T
